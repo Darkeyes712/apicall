@@ -1,0 +1,15 @@
+{% macro head() %}
+    <head>
+        <meta charset="UTF-8">
+        <title>Cafe API</title>
+        <link href="https://fonts.googleapis.com/css2?family=Raleway" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    </head>
+{% endmacro %}
+
+{% macro footer(year) %}
+    <footer>
+        <p>Copyright &copy; Made by Kolzo_dev in {{ year }}</p>
+    </footer>
+{% endmacro %}
+

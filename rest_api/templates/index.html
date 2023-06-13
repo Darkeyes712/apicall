@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% from "macros.html" import head, blog, footer %}
+<html lang="en">
+{{ head() }}
+<body>
+    <div class="top">
+        <h1>Welcome to Users Mongo Flask RESTful API</h1>
+    </div>
+    <div class="api_text">
+        <a href="http://192.168.1.242:80/api/users" target="_blank">Get All Users Data</a>
+    </div>
+    <div class="api_text">
+        <a href="http://192.168.1.242:80/api/users/2" target="_blank">Search for a Specific Animal</a>
+         <!-- The above is us building a link to the specific User we want, using the /id or /2 /3 etc , aka ID parameter  -->
+    </div> 
+    <div class="video">
+        <iframe width="660" height="415" src="https://www.youtube.com/embed/SUftZB0Geco" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+</body>
+{{ footer(data['year']) }}
+</html>
