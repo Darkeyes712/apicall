@@ -28,24 +28,26 @@ pub fn get_value_from_option<T>(option: Option<T>) -> Option<T> {
 
 pub fn parse_json_data(json_data: &str) -> Result<(), serde_json::Error> {
 
-    let kurec: Value = serde_json::from_str(json_data)?;
+    let initial_json_value: Value = serde_json::from_str(json_data)?;
     // println!("{}", kurec);
-    let nadurven_kurec = kurec.as_array(); // tva go pravi na array
-    let index_ = 18;
-    if let Some(arr) = nadurven_kurec {
-        if let Some(first_obj) = arr.get(index_) {
-            if let Some(id) = first_obj.get("_id") {
+    let json_array = initial_json_value.as_array(); // tva go pravi na array
+    let index_ = 1; // this is the index of the array
+    if let Some(arr) = json_array {
+        if let Some(first_obj) = arr.get(index_) { // this gets into the array and the Some() checks if the value exists, if not, it will return Null. 
+            if let Some(id) = first_obj.get("_id") { // This gets the value for the "_id" key
                 println!("ID: {:?}", id);
             }
-            if let Some(name) = first_obj.get("name") {
+            if let Some(name) = first_obj.get("name") { // This gets the value for the "name" key
                 println!("Name: {:?}", name);
             }
-            if let Some(email) = first_obj.get("email") {
+            if let Some(email) = first_obj.get("email") { // This gets the value for the "email" key
                 println!("Email: {:?}", email);
             }
         } else {
             println!("Nema takuv index {}, da te eba u glupaka", index_)
         }
+    } else {
+        println!("Nema value u toa aray, da te eba u glupaka")
     }
 
     Ok(())
