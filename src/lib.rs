@@ -19,57 +19,55 @@ pub fn get_user_input(user_input:&str) -> String{
     return usr_inp;
 }
 
+pub fn get_value_from_option<T>(option: Option<T>) -> Option<T> {
+    match option {
+        Some(value) => Some(value),
+        None => None,
+    }
+}
 
-// #[tokio::main]
-// pub async fn create_get_request() -> Result<(), Box<dyn std::error::Error>> {
-//     let response = reqwest::get("http://192.168.1.242:80/api/users").await?.text().await?;
+pub fn parse_json_data(json_data: &str) -> Result<(), serde_json::Error> {
 
-//     if let Ok(json_response) = serde_json::from_str::<serde_json::Value>(&response) {
-//         if let serde_json::Value::Object(obj) = json_response {
-//             let hashmap: std::collections::HashMap<String, String> = obj
-//                 .iter()
-//                 .filter_map(|(k, v)| {
-//                     if let serde_json::Value::String(s) = v {
-//                         Some((k.clone(), s.clone()))
-//                     } else {
-//                         Some((k.clone(), v.to_string()))
-//                     }
-//                 })
-//                 .collect();
-            
-//             // Print the hashmap
-//             for (key, value) in &hashmap {
-//                 println!("Key: {}, Value: {}", key, value);
-//             }
-//         } else {
-//             println!("The JSON response is not an object.");
-//         }
-//     } else {
-//         println!("Failed to parse JSON response.");
+    let kurec: Value = serde_json::from_str(json_data)?;
+    // println!("{}", kurec);
+    let nadurven_kurec = kurec.as_array(); // tva go pravi na array
+    let index_ = 18;
+    if let Some(arr) = nadurven_kurec {
+        if let Some(first_obj) = arr.get(index_) {
+            if let Some(id) = first_obj.get("_id") {
+                println!("ID: {:?}", id);
+            }
+            if let Some(name) = first_obj.get("name") {
+                println!("Name: {:?}", name);
+            }
+            if let Some(email) = first_obj.get("email") {
+                println!("Email: {:?}", email);
+            }
+        } else {
+            println!("Nema takuv index {}, da te eba u glupaka", index_)
+        }
+    }
 
-//         // Process the response as a string
-//         let hashmap: std::collections::HashMap<String, String> = vec![("response".to_owned(), response)].into_iter().collect();
-        
-//         // Print the hashmap
-//         for (key, value) in &hashmap {
-//             println!("Key: {}, Value: {}", key, value);
-//         }
-//     }
-
-//     Ok(())
-// }
-
+    Ok(())
+}
 
 #[tokio::main]
 pub async fn create_get_request() -> Result<(), Box<dyn std::error::Error>> {
     let response = reqwest::get("http://192.168.1.242:80/api/users").await?.text().await?;
-
     let hashmap: std::collections::HashMap<String, String> = vec![("response".to_owned(), response)].into_iter().collect();
-        
-    // Print the hashmap
-    for (key, value) in &hashmap {
-        println!("Key: {}, Value: {}", key, value);
+    
+    // for (key, value) in &hashmap {
+    //     println!("Key: {}, Value: {}", key, value);
+    // } ---> to print the key value data of the hashmap. 
+
+    // Extract the JSON string from the hashmap value
+    if let Some(json_data) = hashmap.get("response") {
+        // Call the parse_json_data function to parse and process the JSON data
+        parse_json_data(json_data)?;
+    } else {
+        println!("Response not found in the hashmap.");
     }
+
 
     Ok(())
 }
