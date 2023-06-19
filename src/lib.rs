@@ -1,9 +1,15 @@
 use std::io::{self, Write};
-use reqwest;
+use reqwest::Client;
 use serde_json::{json, Map, Value};
 use std::collections::HashMap;
 use::tokio::main;
 
+#[derive(serde::Serialize)]
+struct Post {
+    name: String,
+    age: u32,
+    email: String
+}
 
 pub fn print_to_terminal(prompt:&str) {
     println!("{}", prompt);
@@ -65,3 +71,35 @@ pub async fn create_get_request() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
+
+#[tokio::main]
+pub async fn create_post_request() -> Result<(), Box<dyn std::error::Error>> {
+
+    let json_person = Post {
+        name: String::from("Kolzo"),
+        age: 28,
+        email: String::from("kolzoe@example.com"),
+    };
+    let json_string = serde_json::to_string(&json_person).unwrap();
+    println!("{:?}", json_string);
+
+    let client = Client::new();
+
+    let response = client
+    .post("https://httpbin.org/post")
+    .body(json_string)  // Set the request body
+    .send()
+    .await?;
+
+    // Handle the response
+    if response.status().is_success() {
+        println!("POST request successful! Response is: {:?}", response);
+    } else {
+        println!("POST request failed with status: {}", response.status());
+    }
+
+Ok(())
+
+}
+
+
