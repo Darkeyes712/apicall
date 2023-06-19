@@ -81,8 +81,6 @@ pub async fn create_post_request() -> Result<(), Box<dyn std::error::Error>> {
         email: String::from("kolzoe@example.com"),
     };
     let json_string = serde_json::to_string(&json_person).unwrap();
-    println!("{:?}", json_string);
-
     let client = Client::new();
 
     let response = client
@@ -93,7 +91,22 @@ pub async fn create_post_request() -> Result<(), Box<dyn std::error::Error>> {
 
     // Handle the response
     if response.status().is_success() {
-        println!("POST request successful! Response is: {:?}", response);
+        let body = response.text().await?;
+        let json_object: serde_json::Value = serde_json::from_str(&body)?;
+
+        // Parse the "data" field as a JSON string
+        if let Some(data) = json_object.get("data") {
+            if let Some(data_string) = data.as_str() {
+                let data_json: serde_json::Value = serde_json::from_str(data_string)?;
+
+                // Iterate over the parsed "data" JSON object's contents
+                if let Some(data_map) = data_json.as_object() {
+                    for (key, value) in data_map {
+                        println!("Key: {:?}, Value: {:?}", key, value);
+                    }
+                }
+            }
+        }
     } else {
         println!("POST request failed with status: {}", response.status());
     }
