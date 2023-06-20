@@ -2,7 +2,7 @@ use::apicall::{create_get_request, create_post_request, get_user_input}; // , cr
 
 fn main() {
 
-    create_post_request();
+    create_get_request();
 
     // let usr_inp: String = get_user_input("get || post ?").to_lowercase();
     // println!("User input: {}", usr_inp);
