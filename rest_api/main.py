@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, make_response, render_template, request
 from flask_mongoengine import MongoEngine
 from datetime import datetime
+import json
 
 
 MONGO_PATH = "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
@@ -49,9 +50,26 @@ def db_populate():
     user_2.save()
     user_3.save()
     user_4.save()
+
+    response = {
+        "response": make_response('', 201),
+        "simple_data_types": {
+            "string": "string",
+            "integer": 1,
+            "float": 1.1,
+            "bool": True
+        },
+        "complex_data_types": {
+            "list": ["crap1", "crap2"],
+            "dict": {"crap1": "crap2"},
+            "tuple": (1, "shit", 2.2)
+        }
+    }
     
     return make_response('', 201)
 
+
+        
 
 @app.route('/api/users', methods=['GET', 'POST'])
 def api_users():

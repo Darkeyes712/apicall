@@ -109,3 +109,23 @@ Ok(())
 }
 
 
+#[tokio::main]
+pub async fn test_create_post_request() -> Result<(), Box<dyn std::error::Error>> {
+
+    let client = Client::new();
+
+    let response = client
+    .post("http://192.168.1.242:80/api/db_populate") // http://192.168.1.242:80/api/db_populate https://httpbin.org/post
+    .body("Hello")  // Set the request body
+    .send()
+    .await?;
+    
+    println!("{:?}", response.text().await?);
+    // Handle the response
+//     if response.status().is_success() {
+//         let body = response.text().await?;
+//         println!("{}", body);
+//     }
+
+    Ok(())
+}
